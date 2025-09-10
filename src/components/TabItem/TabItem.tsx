@@ -40,9 +40,11 @@ export default function TabItem({
       `}
     >
       {icon && <Image src={icon.src} alt={icon.alt} width={16} height={16} />}
-      <p className={tab.id === activeTab ? "text-black" : ""}>
-        {tab.pinned ? "" : tab.name}
-      </p>
+      {tab.pinned ? (
+        ""
+      ) : (
+        <p className={tab.id === activeTab ? "text-black" : ""}>{tab.name}</p>
+      )}
     </Tab>
   );
 }
