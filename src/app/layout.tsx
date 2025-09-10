@@ -22,7 +22,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} antialiased`}>{children}</body>
+      <body className={`flex ${poppins.variable} antialiased`}>
+        <aside className="w-16 h-screen bg-white border-r border-[rgba(174,182,206,0.2)]"></aside>
+        <div className="grow bg-[rgba(174,182,206,0.2)]">
+          <header className="w-full h-[69px] bg-white border-b border-[rgba(174,182,206,0.2)]"></header>
+          {children}
+        </div>
+      </body>
     </html>
   );
 }
