@@ -11,13 +11,15 @@ interface TabItemProps {
   activeTab: number;
   icons: TabIcon[];
   onClick: () => void;
+  onMouseEnter?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
 
 export default function TabItem({
   tab,
   activeTab,
-  onClick,
   icons,
+  onClick,
+  onMouseEnter,
 }: TabItemProps) {
   const icon = getIcon(tab.name, icons);
 
@@ -25,6 +27,7 @@ export default function TabItem({
     <Tab
       href={getHref(tab.name)}
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
       className={`flex items-center gap-2.5 h-full px-5 py-4
         border-t-2 border-transparent cursor-pointer
         hover:bg-[rgba(241,245,248,1)]

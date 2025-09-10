@@ -2,24 +2,61 @@
 
 import { useEffect, useState } from "react";
 
-import { Tab, TabIcon } from "@/interfaces/interfaces";
+import Image from "next/image";
 import { useOverflowTabs } from "@/hooks/useOverflowTabs";
 
 import TabItem from "../TabItem/TabItem";
 import { TabsDropdown } from "../TabsDropdown/TabsDropdown";
 
-export interface TabsContainerProps {
-  tabs: Tab[];
-  icons: TabIcon[];
-}
 import { ChevronDown } from "lucide-react";
 
-export default function TabsContainer({ tabs, icons }: TabsContainerProps) {
+const icons = [
+  { id: 1, src: "/tabs/Lagerverwaltung.svg", alt: "Lagerverwaltung" },
+  { id: 2, src: "/tabs/Dashboard.svg", alt: "Dashboard" },
+  { id: 3, src: "/tabs/Banking.svg", alt: "Banking" },
+  { id: 4, src: "/tabs/Telefonie.svg", alt: "Telefonie" },
+  { id: 5, src: "/tabs/Accounting.svg", alt: "Accounting" },
+  { id: 6, src: "/tabs/Verkauf.svg", alt: "Verkauf" },
+  { id: 7, src: "/tabs/Statistik.svg", alt: "Statistik" },
+  { id: 8, src: "/tabs/PostOffice.svg", alt: "Post Office" },
+  { id: 9, src: "/tabs/Administration.svg", alt: "Administration" },
+  { id: 10, src: "/tabs/Help.svg", alt: "Help" },
+  { id: 11, src: "/tabs/Warenbestand.svg", alt: "Warenbestand" },
+  { id: 12, src: "/tabs/Auswahllisten.svg", alt: "Auswahllisten" },
+  { id: 13, src: "/tabs/Einkauf.svg", alt: "Einkauf" },
+  { id: 14, src: "/tabs/Rechn.svg", alt: "Rechn" },
+];
+
+export default function TabsContainer({}) {
+  const [tabs, setTabs] = useState([
+    { id: 1, name: "Lagerverwaltung", pinned: true },
+    { id: 2, name: "Dashboard", pinned: false },
+    { id: 3, name: "Banking", pinned: false },
+    { id: 4, name: "Telefonie", pinned: false },
+    { id: 5, name: "Accounting", pinned: false },
+    { id: 6, name: "Verkauf", pinned: false },
+    { id: 7, name: "Statistik", pinned: false },
+    { id: 8, name: "Post Office", pinned: false },
+    { id: 9, name: "Administration", pinned: false },
+    { id: 10, name: "Help", pinned: false },
+    { id: 11, name: "Warenbestand", pinned: false },
+    { id: 12, name: "Auswahllisten", pinned: false },
+    { id: 13, name: "Einkauf", pinned: false },
+    { id: 14, name: "Rechn", pinned: false },
+  ]);
+
   const [activeTab, setActiveTab] = useState(2);
   const { visibleTabs, overflowTabs, navRef, setTabRef } = useOverflowTabs({
     tabs,
   });
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const [contextMenu, setContextMenu] = useState<{
+    visible: boolean;
+    x: number;
+    y: number;
+    tabId: number | null;
+  }>({ visible: false, x: 0, y: 0, tabId: null });
 
   useEffect(() => {
     if (!dropdownOpen) return;
@@ -34,10 +71,53 @@ export default function TabsContainer({ tabs, icons }: TabsContainerProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [dropdownOpen]);
 
+  const handleMouseEnter = (
+    e: React.MouseEvent,
+    tabId: number,
+    pinned: boolean
+  ) => {
+    e.preventDefault();
+    if (e.currentTarget) {
+      const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
+
+      setContextMenu({
+        visible: true,
+        x: rect.left + 20,
+        y: rect.bottom - 10,
+        tabId,
+      });
+    }
+  };
+
+  const handlePinToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (contextMenu.tabId === null) return;
+
+    setTabs((prevTabs) => {
+      const tabIndex = prevTabs.findIndex((t) => t.id === contextMenu.tabId);
+      const tab = prevTabs[tabIndex];
+      const newTabs = prevTabs.filter((t) => t.id !== tab.id);
+
+      if (tab.pinned) {
+        const unpinnedTab = { ...tab, pinned: false };
+        newTabs.push(unpinnedTab);
+        return newTabs;
+      } else {
+        const pinnedTab = { ...tab, pinned: true };
+        const lastPinnedIndex = newTabs.map((t) => t.pinned).lastIndexOf(true);
+        newTabs.splice(lastPinnedIndex + 1, 0, pinnedTab);
+        return newTabs;
+      }
+    });
+
+    setContextMenu({ visible: false, x: 0, y: 0, tabId: null });
+  };
+
   return (
     <nav ref={navRef} className="relative flex w-full">
       {tabs.map((tab, index) => {
         const isVisible = visibleTabs.some((t) => t.id === tab.id);
+
         if (!isVisible) {
           return (
             <div
@@ -58,6 +138,7 @@ export default function TabsContainer({ tabs, icons }: TabsContainerProps) {
               activeTab={activeTab}
               icons={icons}
               onClick={() => setActiveTab(tab.id)}
+              onMouseEnter={(e) => handleMouseEnter(e, tab.id, tab.pinned)}
             />
             {index < tabs.length - 1 &&
               visibleTabs.some((t) => t.id === tabs[index + 1]?.id) && (
@@ -92,6 +173,40 @@ export default function TabsContainer({ tabs, icons }: TabsContainerProps) {
           )}
         </>
       )}
+
+      {contextMenu.visible &&
+        contextMenu.tabId !== null &&
+        (() => {
+          const tab = tabs.find((t) => t.id === contextMenu.tabId);
+          if (!tab) return null;
+
+          const icon = icons.find((i) => i.alt === tab.name);
+
+          return (
+            <div
+              className="fixed flex items-center gap-2.5 p-3 bg-white border border-gray-200 rounded-md shadow-lg cursor-pointer z-50"
+              style={{ top: contextMenu.y, left: contextMenu.x }}
+              onClick={handlePinToggle}
+              onMouseEnter={() =>
+                setContextMenu((prev) => ({ ...prev, visible: true }))
+              }
+              onMouseLeave={() =>
+                setContextMenu({ visible: false, x: 0, y: 0, tabId: null })
+              }
+            >
+              {tab.pinned ? (
+                icon && (
+                  <Image src={icon.src} alt={icon.alt} width={16} height={16} />
+                )
+              ) : (
+                <Image src="/staple.svg" alt="Staple" width={16} height={16} />
+              )}
+              <p className="text-[rgba(127,133,141,1)] text-sm">
+                {tab.pinned ? tab.name : "Tab anpinnen"}
+              </p>
+            </div>
+          );
+        })()}
     </nav>
   );
 }
