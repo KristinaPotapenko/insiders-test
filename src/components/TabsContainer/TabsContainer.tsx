@@ -5,7 +5,11 @@ import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+
 import { useOverflowTabs } from "@/hooks/useOverflowTabs";
+import { getHref } from "@/utils/getHref";
+import { getTabsFromStorage, saveTabsToStorage } from "@/utils/storage";
 
 import TabItem from "../TabItem/TabItem";
 import { TabsDropdown } from "../TabsDropdown/TabsDropdown";
@@ -110,24 +114,41 @@ const DraggableTab = ({
 };
 
 function TabsContainerInner() {
-  const [tabs, setTabs] = useState([
-    { id: 1, name: "Lagerverwaltung", pinned: true },
-    { id: 2, name: "Dashboard", pinned: false },
-    { id: 3, name: "Banking", pinned: false },
-    { id: 4, name: "Telefonie", pinned: false },
-    { id: 5, name: "Accounting", pinned: false },
-    { id: 6, name: "Verkauf", pinned: false },
-    { id: 7, name: "Statistik", pinned: false },
-    { id: 8, name: "Post Office", pinned: false },
-    { id: 9, name: "Administration", pinned: false },
-    { id: 10, name: "Help", pinned: false },
-    { id: 11, name: "Warenbestand", pinned: false },
-    { id: 12, name: "Auswahllisten", pinned: false },
-    { id: 13, name: "Einkauf", pinned: false },
-    { id: 14, name: "Rechn", pinned: false },
-  ]);
+  const [tabs, setTabs] = useState<Tab[]>(() => {
+    const storedTabs = getTabsFromStorage();
+    if (storedTabs) {
+      return storedTabs;
+    }
 
-  const [activeTab, setActiveTab] = useState(2);
+    return [
+      { id: 1, name: "Lagerverwaltung", pinned: true },
+      { id: 2, name: "Dashboard", pinned: false },
+      { id: 3, name: "Banking", pinned: false },
+      { id: 4, name: "Telefonie", pinned: false },
+      { id: 5, name: "Accounting", pinned: false },
+      { id: 6, name: "Verkauf", pinned: false },
+      { id: 7, name: "Statistik", pinned: false },
+      { id: 8, name: "Post Office", pinned: false },
+      { id: 9, name: "Administration", pinned: false },
+      { id: 10, name: "Help", pinned: false },
+      { id: 11, name: "Warenbestand", pinned: false },
+      { id: 12, name: "Auswahllisten", pinned: false },
+      { id: 13, name: "Einkauf", pinned: false },
+      { id: 14, name: "Rechn", pinned: false },
+    ];
+  });
+
+  useEffect(() => {
+    saveTabsToStorage(tabs);
+  }, [tabs]);
+
+  const pathname = usePathname();
+
+  const [activeTab, setActiveTab] = useState<number>(() => {
+    const currentTab = tabs.find((tab) => getHref(tab.name) === pathname);
+    return currentTab ? currentTab.id : 2;
+  });
+
   const { visibleTabs, overflowTabs, navRef, setTabRef } = useOverflowTabs({
     tabs,
   });
