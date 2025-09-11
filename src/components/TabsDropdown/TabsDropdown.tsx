@@ -4,16 +4,23 @@ import { getHref } from "@/utils/getHref";
 import { getIcon } from "@/utils/getIcon";
 
 import Tab from "../Tab/Tab";
+import Close from "../Close/Close";
 
 export interface TabsDropdownProps {
   tabs: Tabinterface[];
   activeTab: number;
   onSelect: (id: number) => void;
+  onDelete: (id: number) => void;
 }
 
-export function TabsDropdown({ tabs, activeTab, onSelect }: TabsDropdownProps) {
+export function TabsDropdown({
+  tabs,
+  activeTab,
+  onSelect,
+  onDelete,
+}: TabsDropdownProps) {
   return (
-    <div className="absolute top-full right-0 mt-1 w-48 bg-white border border-[rgba(233,233,233,0.7)] rounded-md shadow-lg z-50">
+    <div className="absolute top-full right-0 mt-1 bg-white border border-[rgba(233,233,233,0.7)] rounded-md shadow-lg z-50">
       {tabs.map((tab) => {
         const Icon = getIcon(tab.name);
 
@@ -31,6 +38,7 @@ export function TabsDropdown({ tabs, activeTab, onSelect }: TabsDropdownProps) {
               className={`w-4 h-4 flex-shrink-0 text-gray] ${activeClass}`}
             />
             <p className={activeClass}>{tab.pinned ? "" : tab.name} </p>
+            <Close isDropdown={true} onDelete={onDelete} id={tab.id} />
           </Tab>
         );
       })}

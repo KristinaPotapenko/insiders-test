@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { useOverflowTabs } from "@/hooks/useOverflowTabs";
 import { getHref } from "@/utils/getHref";
@@ -37,6 +37,7 @@ interface DraggableTabProps {
   activeTab: number;
   onTabClick: (id: number) => void;
   onMouseEnter: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
+  onDelete: (id: number) => void;
   moveTab: (fromIndex: number, toIndex: number) => void;
 }
 
@@ -46,6 +47,7 @@ const DraggableTab = ({
   activeTab,
   onTabClick,
   onMouseEnter,
+  onDelete,
   moveTab,
 }: DraggableTabProps) => {
   const [{ isDragging }, drag] = useDrag({
@@ -88,6 +90,7 @@ const DraggableTab = ({
         activeTab={activeTab}
         onClick={() => onTabClick(tab.id)}
         onMouseEnter={onMouseEnter}
+        onDelete={onDelete}
       />
     </div>
   );
@@ -96,9 +99,11 @@ const DraggableTab = ({
 function TabsContainerInner() {
   const [tabs, setTabs] = useState<Tab[]>(() => {
     const storedTabs = getTabsFromStorage();
-    if (storedTabs) {
-      return storedTabs;
-    }
+
+    if (storedTabs)
+      if (storedTabs?.length > 0) {
+        return storedTabs;
+      }
 
     return [
       { id: 1, name: "Lagerverwaltung", pinned: true },
@@ -126,7 +131,7 @@ function TabsContainerInner() {
 
   const [activeTab, setActiveTab] = useState<number>(() => {
     const currentTab = tabs.find((tab) => getHref(tab.name) === pathname);
-    return currentTab ? currentTab.id : 2;
+    return currentTab ? currentTab.id : 0;
   });
 
   const { visibleTabs, overflowTabs, navRef, setTabRef } = useOverflowTabs({
@@ -216,6 +221,27 @@ function TabsContainerInner() {
     setContextMenu({ visible: false, x: 0, y: 0, tabId: null });
   };
 
+  const router = useRouter();
+
+  const handleDeleteTab = (id: number) => {
+    const isActiveTab = activeTab === id;
+
+    setTabs((prev) => {
+      const newTabs = prev.filter((tab) => tab.id !== id);
+
+      if (isActiveTab) {
+        if (newTabs.length > 0) {
+          router.push(getHref(newTabs[0].name));
+          setActiveTab(+newTabs[0].id);
+        } else {
+          router.push("/");
+        }
+      }
+
+      return newTabs;
+    });
+  };
+
   return (
     <nav ref={navRef} className="relative flex w-full">
       {tabs.map((tab, index) => {
@@ -244,6 +270,7 @@ function TabsContainerInner() {
               onMouseEnter={(e: React.MouseEvent) =>
                 handleMouseEnter(e, tab.id, tab.pinned)
               }
+              onDelete={handleDeleteTab}
               moveTab={moveTab}
             />
             {index < tabs.length - 1 && (
@@ -273,6 +300,7 @@ function TabsContainerInner() {
                 setActiveTab(id);
                 setDropdownOpen(false);
               }}
+              onDelete={handleDeleteTab}
             />
           )}
         </>

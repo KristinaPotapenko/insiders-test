@@ -3,12 +3,14 @@ import { getHref } from "@/utils/getHref";
 import { getIcon } from "@/utils/getIcon";
 
 import Tab from "../Tab/Tab";
+import Close from "../Close/Close";
 
 interface TabItemProps {
   tab: TabInterface;
   activeTab: number;
   onClick: () => void;
   onMouseEnter?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
+  onDelete?: (id: number) => void;
 }
 
 export default function TabItem({
@@ -16,6 +18,7 @@ export default function TabItem({
   activeTab,
   onClick,
   onMouseEnter,
+  onDelete,
 }: TabItemProps) {
   const Icon = getIcon(tab.name);
 
@@ -36,6 +39,7 @@ export default function TabItem({
     >
       <Icon className={`w-4 h-4 flex-shrink-0 ${activeClass}`} />
       {tab.pinned ? "" : <p className={activeClass}>{tab.name}</p>}
+      {isActive && onDelete && <Close onDelete={onDelete} id={tab.id} />}
     </Tab>
   );
 }
