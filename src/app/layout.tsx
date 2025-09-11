@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`flex ${poppins.variable} antialiased h-screen overflow-hidden`}
+        className={`flex ${poppins.variable} font-medium antialiased h-screen overflow-hidden`}
       >
         <aside className="w-16 h-full bg-white border-r border-[rgba(174,182,206,0.2)]"></aside>
         <div className="flex flex-col grow min-w-0 bg-[rgba(174,182,206,0.2)]">

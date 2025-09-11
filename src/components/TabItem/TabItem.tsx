@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import { Tab as TabInterface, TabIcon } from "@/interfaces/interfaces";
 import { getHref } from "@/utils/getHref";
 import { getIcon } from "@/utils/getIcon";
@@ -9,7 +7,6 @@ import Tab from "../Tab/Tab";
 interface TabItemProps {
   tab: TabInterface;
   activeTab: number;
-  icons: TabIcon[];
   onClick: () => void;
   onMouseEnter?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
@@ -17,11 +14,13 @@ interface TabItemProps {
 export default function TabItem({
   tab,
   activeTab,
-  icons,
   onClick,
   onMouseEnter,
 }: TabItemProps) {
-  const icon = getIcon(tab.name, icons);
+  const Icon = getIcon(tab.name);
+
+  const isActive = tab.id === activeTab;
+  const activeClass = isActive ? "text-black" : "";
 
   return (
     <Tab
@@ -32,19 +31,13 @@ export default function TabItem({
         border-t-2 border-transparent cursor-pointer
         hover:bg-[rgba(241,245,248,1)]
         hover:border-t-[rgb(127,133,141)]
-        ${
-          tab.id === activeTab
-            ? "border-t-[rgb(70,144,226)] bg-[rgba(241,245,248,1)]"
-            : ""
-        }
+        ${isActive ? "border-t-[rgb(70,144,226)] bg-[rgba(241,245,248,1)]" : ""}
       `}
     >
-      {icon && <Image src={icon.src} alt={icon.alt} width={16} height={16} />}
-      {tab.pinned ? (
-        ""
-      ) : (
-        <p className={tab.id === activeTab ? "text-black" : ""}>{tab.name}</p>
-      )}
+      <Icon
+        className={`w-4 h-4 flex-shrink-0 text-[rgb(127,133,141)] ${activeClass}`}
+      />
+      {tab.pinned ? "" : <p className={activeClass}>{tab.name}</p>}
     </Tab>
   );
 }

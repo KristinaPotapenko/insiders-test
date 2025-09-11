@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 import { useOverflowTabs } from "@/hooks/useOverflowTabs";
@@ -16,24 +15,8 @@ import { TabsDropdown } from "../TabsDropdown/TabsDropdown";
 
 import { ChevronDown } from "lucide-react";
 
-import { Tab, TabIcon as Icon } from "@/interfaces/interfaces";
-
-const icons = [
-  { id: 1, src: "/tabs/Lagerverwaltung.svg", alt: "Lagerverwaltung" },
-  { id: 2, src: "/tabs/Dashboard.svg", alt: "Dashboard" },
-  { id: 3, src: "/tabs/Banking.svg", alt: "Banking" },
-  { id: 4, src: "/tabs/Telefonie.svg", alt: "Telefonie" },
-  { id: 5, src: "/tabs/Accounting.svg", alt: "Accounting" },
-  { id: 6, src: "/tabs/Verkauf.svg", alt: "Verkauf" },
-  { id: 7, src: "/tabs/Statistik.svg", alt: "Statistik" },
-  { id: 8, src: "/tabs/PostOffice.svg", alt: "Post Office" },
-  { id: 9, src: "/tabs/Administration.svg", alt: "Administration" },
-  { id: 10, src: "/tabs/Help.svg", alt: "Help" },
-  { id: 11, src: "/tabs/Warenbestand.svg", alt: "Warenbestand" },
-  { id: 12, src: "/tabs/Auswahllisten.svg", alt: "Auswahllisten" },
-  { id: 13, src: "/tabs/Einkauf.svg", alt: "Einkauf" },
-  { id: 14, src: "/tabs/Rechn.svg", alt: "Rechn" },
-];
+import { Tab } from "@/interfaces/interfaces";
+import { getIcon } from "@/utils/getIcon";
 
 export default function TabsContainer() {
   return (
@@ -52,7 +35,6 @@ interface DraggableTabProps {
   tab: Tab;
   index: number;
   activeTab: number;
-  icons: Icon[];
   onTabClick: (id: number) => void;
   onMouseEnter: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
   moveTab: (fromIndex: number, toIndex: number) => void;
@@ -62,7 +44,6 @@ const DraggableTab = ({
   tab,
   index,
   activeTab,
-  icons,
   onTabClick,
   onMouseEnter,
   moveTab,
@@ -105,7 +86,6 @@ const DraggableTab = ({
       <TabItem
         tab={tab}
         activeTab={activeTab}
-        icons={icons}
         onClick={() => onTabClick(tab.id)}
         onMouseEnter={onMouseEnter}
       />
@@ -260,7 +240,6 @@ function TabsContainerInner() {
               tab={tab}
               index={index}
               activeTab={activeTab}
-              icons={icons}
               onTabClick={setActiveTab}
               onMouseEnter={(e: React.MouseEvent) =>
                 handleMouseEnter(e, tab.id, tab.pinned)
@@ -294,7 +273,6 @@ function TabsContainerInner() {
                 setActiveTab(id);
                 setDropdownOpen(false);
               }}
-              icons={icons}
             />
           )}
         </>
@@ -306,7 +284,10 @@ function TabsContainerInner() {
           const tab = tabs.find((t) => t.id === contextMenu.tabId);
           if (!tab) return null;
 
-          const icon = icons.find((i) => i.alt === tab.name);
+          const Icon = getIcon(tab.name);
+          const StapleIcon = getIcon("Staple");
+
+          const pinnedClass = tab.pinned ? "text-black" : "";
 
           return (
             <div
@@ -321,13 +302,15 @@ function TabsContainerInner() {
               }
             >
               {tab.pinned ? (
-                icon && (
-                  <Image src={icon.src} alt={icon.alt} width={16} height={16} />
-                )
+                <Icon
+                  className={`w-4 h-4 flex-shrink-0 text-[rgb(127,133,141)] ${pinnedClass}`}
+                />
               ) : (
-                <Image src="/staple.svg" alt="Staple" width={16} height={16} />
+                <StapleIcon className="w-4 h-4 flex-shrink-0 text-[rgb(127,133,141)]" />
               )}
-              <p className="text-[rgba(127,133,141,1)] text-sm">
+              <p
+                className={`text-[rgba(127,133,141,1)] text-sm ${pinnedClass}`}
+              >
                 {tab.pinned ? tab.name : "Tab anpinnen"}
               </p>
             </div>

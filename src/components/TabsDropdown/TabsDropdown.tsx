@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import { Tab as Tabinterface, TabIcon } from "@/interfaces/interfaces";
 
 import { getHref } from "@/utils/getHref";
@@ -10,20 +8,17 @@ import Tab from "../Tab/Tab";
 export interface TabsDropdownProps {
   tabs: Tabinterface[];
   activeTab: number;
-  icons: TabIcon[];
   onSelect: (id: number) => void;
 }
 
-export function TabsDropdown({
-  tabs,
-  activeTab,
-  onSelect,
-  icons,
-}: TabsDropdownProps) {
+export function TabsDropdown({ tabs, activeTab, onSelect }: TabsDropdownProps) {
   return (
     <div className="absolute top-full right-0 mt-1 w-48 bg-white border border-[rgba(233,233,233,0.7)] rounded-md shadow-lg z-50">
       {tabs.map((tab) => {
-        const icon = getIcon(tab.name, icons);
+        const Icon = getIcon(tab.name);
+
+        const isActive = tab.id === activeTab;
+        const activeClass = isActive ? "text-black" : "";
 
         return (
           <Tab
@@ -32,12 +27,10 @@ export function TabsDropdown({
             href={getHref(tab.name)}
             onClick={() => onSelect(tab.id)}
           >
-            {icon && (
-              <Image src={icon.src} alt={icon.alt} width={16} height={16} />
-            )}
-            <p className={tab.id === activeTab ? "text-black " : ""}>
-              {tab.pinned ? "" : tab.name}{" "}
-            </p>
+            <Icon
+              className={`w-4 h-4 flex-shrink-0 text-[rgb(127,133,141)] ${activeClass}`}
+            />
+            <p className={activeClass}>{tab.pinned ? "" : tab.name} </p>
           </Tab>
         );
       })}
