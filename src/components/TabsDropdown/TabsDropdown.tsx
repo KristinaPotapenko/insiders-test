@@ -37,7 +37,7 @@ export function TabsDropdown({
             <Icon
               className={`w-4 h-4 flex-shrink-0 text-gray] ${activeClass}`}
             />
-            <p className={activeClass}>{tab.pinned ? "" : tab.name} </p>
+            <p className={activeClass}>{tab.name} </p>
             <Close isDropdown={true} onDelete={onDelete} id={tab.id} />
           </Tab>
         );

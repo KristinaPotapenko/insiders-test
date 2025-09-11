@@ -42,12 +42,16 @@ export function useOverflowTabs({
     if (!navRef.current) return;
 
     const navWidth = containerWidth || navRef.current.offsetWidth;
+
+    console.log(tabRefs);
+
     let totalWidth = 0;
     const visible: Tab[] = [];
     const overflow: Tab[] = [];
 
     tabs.forEach((tab) => {
       const tabElement = tabRefs.current.get(tab.id);
+
       const tabWidth = tabElement?.offsetWidth || 120;
       const availableWidth =
         navWidth - (overflow.length > 0 ? chevronWidth : 0);

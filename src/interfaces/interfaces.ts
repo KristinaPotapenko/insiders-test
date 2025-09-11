@@ -9,3 +9,8 @@ export interface TabIcon {
   src: string;
   alt: string;
 }
+
+export interface DraggedTab {
+  id: number;
+  index: number;
+}
