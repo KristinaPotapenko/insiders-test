@@ -26,9 +26,9 @@ export default function RootLayout({
       <body
         className={`flex ${poppins.variable} font-medium antialiased h-screen overflow-hidden`}
       >
-        <aside className="w-16 h-full bg-white border-r border-[rgba(174,182,206,0.2)]"></aside>
-        <div className="flex flex-col grow min-w-0 bg-[rgba(174,182,206,0.2)]">
-          <header className="flex-shrink-0 w-full h-[69px] bg-white border-b border-[rgba(174,182,206,0.2)]"></header>
+        <aside className="w-16 h-full bg-white border-r border-grayTransparent"></aside>
+        <div className="flex flex-col grow min-w-0 bg-grayTransparent">
+          <header className="flex-shrink-0 w-full h-[69px] bg-white border-b border-grayTransparent"></header>
           <main className="flex flex-col flex-1 min-h-0">
             <div className="flex-shrink-0 bg-white pr-12 b-2.5">
               <TabsContainer />

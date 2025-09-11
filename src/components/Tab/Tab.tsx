@@ -17,7 +17,7 @@ export default function Tab({
 }: TabProps) {
   return (
     <Link
-      className={`${className} text-[rgba(127,133,141,1)] text-nowrap`}
+      className={`${className} text-gray text-nowrap`}
       href={href}
       onClick={onClick}
       onMouseEnter={onMouseEnter}

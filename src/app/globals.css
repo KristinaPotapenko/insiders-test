@@ -1,1 +1,8 @@
 @import "tailwindcss";
+
+@theme {
+  --color-grayTransparent: rgba(174, 182, 206, 0.2);
+  --color-gray: rgb(127, 133, 141);
+  --color-offWhite: rgb(241, 245, 248);
+  --color-primaryBlue: rgb(70, 144, 226);
+}

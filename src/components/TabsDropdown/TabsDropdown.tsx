@@ -28,7 +28,7 @@ export function TabsDropdown({ tabs, activeTab, onSelect }: TabsDropdownProps) {
             onClick={() => onSelect(tab.id)}
           >
             <Icon
-              className={`w-4 h-4 flex-shrink-0 text-[rgb(127,133,141)] ${activeClass}`}
+              className={`w-4 h-4 flex-shrink-0 text-gray] ${activeClass}`}
             />
             <p className={activeClass}>{tab.pinned ? "" : tab.name} </p>
           </Tab>

@@ -20,7 +20,7 @@ export default function TabItem({
   const Icon = getIcon(tab.name);
 
   const isActive = tab.id === activeTab;
-  const activeClass = isActive ? "text-black" : "";
+  const activeClass = isActive ? "text-black" : "text-gray";
 
   return (
     <Tab
@@ -29,14 +29,12 @@ export default function TabItem({
       onMouseEnter={onMouseEnter}
       className={`flex items-center gap-2.5 h-full px-5 py-4
         border-t-2 border-transparent cursor-pointer
-        hover:bg-[rgba(241,245,248,1)]
-        hover:border-t-[rgb(127,133,141)]
-        ${isActive ? "border-t-[rgb(70,144,226)] bg-[rgba(241,245,248,1)]" : ""}
+        hover:bg-offWhite
+        hover:border-t-gray
+        ${isActive ? "border-t-primaryBlue bg-offWhite" : ""}
       `}
     >
-      <Icon
-        className={`w-4 h-4 flex-shrink-0 text-[rgb(127,133,141)] ${activeClass}`}
-      />
+      <Icon className={`w-4 h-4 flex-shrink-0 ${activeClass}`} />
       {tab.pinned ? "" : <p className={activeClass}>{tab.name}</p>}
     </Tab>
   );

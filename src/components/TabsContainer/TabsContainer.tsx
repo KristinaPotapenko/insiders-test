@@ -247,7 +247,7 @@ function TabsContainerInner() {
               moveTab={moveTab}
             />
             {index < tabs.length - 1 && (
-              <div className="absolute right-0 top-1/4 h-1/2 w-px bg-[rgba(174,182,206,0.2)] pointer-events-none" />
+              <div className="absolute right-0 top-1/4 h-1/2 w-px bg-grayTransparent pointer-events-none" />
             )}
           </div>
         );
@@ -260,7 +260,7 @@ function TabsContainerInner() {
             className={`flex-shrink-0 w-6 h-6 cursor-pointer self-center mx-2
               ${
                 dropdownOpen
-                  ? "bg-[rgba(70,144,226,1)] text-white rotate-180 rounded"
+                  ? "bg-primaryBlue text-white rotate-180 rounded"
                   : ""
               }
             `}
@@ -287,7 +287,7 @@ function TabsContainerInner() {
           const Icon = getIcon(tab.name);
           const StapleIcon = getIcon("Staple");
 
-          const pinnedClass = tab.pinned ? "text-black" : "";
+          const pinnedClass = tab.pinned ? "text-black" : "text-gray";
 
           return (
             <div
@@ -302,15 +302,11 @@ function TabsContainerInner() {
               }
             >
               {tab.pinned ? (
-                <Icon
-                  className={`w-4 h-4 flex-shrink-0 text-[rgb(127,133,141)] ${pinnedClass}`}
-                />
+                <Icon className={`w-4 h-4 flex-shrink-0 ${pinnedClass}`} />
               ) : (
-                <StapleIcon className="w-4 h-4 flex-shrink-0 text-[rgb(127,133,141)]" />
+                <StapleIcon className="w-4 h-4 flex-shrink-0 text-gray" />
               )}
-              <p
-                className={`text-[rgba(127,133,141,1)] text-sm ${pinnedClass}`}
-              >
+              <p className={`text-sm ${pinnedClass}`}>
                 {tab.pinned ? tab.name : "Tab anpinnen"}
               </p>
             </div>
