@@ -23,6 +23,7 @@ export default function TabsContainer() {
   });
 
   const { dropdownOpen, setDropdownOpen } = useDropdown(navRef as any);
+
   const { contextMenu, setContextMenu, handleMouseEnter, handlePinToggle } =
     useContextMenu(setTabs);
 

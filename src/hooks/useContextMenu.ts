@@ -14,6 +14,7 @@ export const useContextMenu = (
 
   const handleMouseEnter = (e: React.MouseEvent, tabId: number) => {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+
     setContextMenu({
       visible: true,
       x: rect.left + 20,

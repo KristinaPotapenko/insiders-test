@@ -11,7 +11,8 @@ export const useTabsState = () => {
 
   const [tabs, setTabs] = useState<Tab[]>(() => {
     const stored = getTabsFromStorage();
-    if (stored?.length) return stored;
+
+    if (stored) if (stored?.length > 0) return stored;
 
     return [
       { id: 1, name: "Lagerverwaltung", pinned: true },
@@ -58,8 +59,10 @@ export const useTabsState = () => {
 
   const moveTab = (fromIndex: number, toIndex: number) => {
     const updated = [...tabs];
+
     const [moved] = updated.splice(fromIndex, 1);
     updated.splice(toIndex, 0, moved);
+
     setTabs(updated);
   };
 

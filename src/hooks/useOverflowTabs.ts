@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Tab } from "@/interfaces/interfaces";
 
-export interface UseOverflowTabsParams {
+export interface UseOverflowTabsProps {
   tabs: Tab[];
   containerWidth?: number;
   chevronWidth?: number;
@@ -20,10 +20,11 @@ export interface UseOverflowTabsResult {
 export function useOverflowTabs({
   tabs,
   containerWidth,
-  chevronWidth = 24,
-}: UseOverflowTabsParams): UseOverflowTabsResult {
+  chevronWidth = 48,
+}: UseOverflowTabsProps): UseOverflowTabsResult {
   const [visibleTabs, setVisibleTabs] = useState<Tab[]>(tabs);
   const [overflowTabs, setOverflowTabs] = useState<Tab[]>([]);
+
   const navRef = useRef<HTMLDivElement>(null);
   const tabRefs = useRef<Map<number, HTMLDivElement>>(new Map());
 
@@ -42,8 +43,6 @@ export function useOverflowTabs({
     if (!navRef.current) return;
 
     const navWidth = containerWidth || navRef.current.offsetWidth;
-
-    console.log(tabRefs);
 
     let totalWidth = 0;
     const visible: Tab[] = [];
@@ -70,6 +69,7 @@ export function useOverflowTabs({
 
   useEffect(() => {
     calculateTabs();
+
     window.addEventListener("resize", calculateTabs);
     return () => window.removeEventListener("resize", calculateTabs);
   }, [calculateTabs]);
